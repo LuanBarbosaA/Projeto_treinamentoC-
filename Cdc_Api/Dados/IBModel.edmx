@@ -1,0 +1,458 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="IBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Agencia">
+          <Key>
+            <PropertyRef Name="NumAgencia" />
+          </Key>
+          <Property Name="NumAgencia" Type="varchar" MaxLength="4" Nullable="false" />
+          <Property Name="EnderecoId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Cliente">
+          <Key>
+            <PropertyRef Name="Cpf" />
+          </Key>
+          <Property Name="Cpf" Type="varchar" MaxLength="11" Nullable="false" />
+          <Property Name="Nome" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="DataNascimento" Type="datetime" Nullable="false" />
+          <Property Name="EnderecoId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Conta">
+          <Key>
+            <PropertyRef Name="NumeroConta" />
+          </Key>
+          <Property Name="NumeroConta" Type="varchar" MaxLength="6" Nullable="false" />
+          <Property Name="Tipo" Type="varchar" MaxLength="8" Nullable="false" />
+          <Property Name="Saldo" Type="float" Nullable="false" />
+          <Property Name="IdPacote" Type="int" Nullable="false" />
+          <Property Name="IdAgencia" Type="varchar" MaxLength="4" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Endereco">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Logradouro" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Bairro" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Numero" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="Estado" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="Cidade" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Bloco" Type="varchar" MaxLength="20" />
+          <Property Name="Condominio" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Lancamento">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Descricao" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Valor" Type="float" Nullable="false" />
+          <Property Name="Data" Type="datetime" Nullable="false" />
+          <Property Name="IdNumeroConta" Type="varchar" MaxLength="6" Nullable="false" />
+          <Property Name="IdCpf" Type="varchar" MaxLength="11" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Pacote">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nome" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__Agencia__Enderec__2A4B4B5E">
+          <End Role="Endereco" Type="Self.Endereco" Multiplicity="1" />
+          <End Role="Agencia" Type="Self.Agencia" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Endereco">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Agencia">
+              <PropertyRef Name="EnderecoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Cliente__Enderec__276EDEB3">
+          <End Role="Endereco" Type="Self.Endereco" Multiplicity="1" />
+          <End Role="Cliente" Type="Self.Cliente" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Endereco">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Cliente">
+              <PropertyRef Name="EnderecoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Conta__IdAgencia__47DBAE45">
+          <End Role="Agencia" Type="Self.Agencia" Multiplicity="1" />
+          <End Role="Conta" Type="Self.Conta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agencia">
+              <PropertyRef Name="NumAgencia" />
+            </Principal>
+            <Dependent Role="Conta">
+              <PropertyRef Name="IdAgencia" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Conta__IdPacote__2D27B809">
+          <End Role="Pacote" Type="Self.Pacote" Multiplicity="1" />
+          <End Role="Conta" Type="Self.Conta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Pacote">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Conta">
+              <PropertyRef Name="IdPacote" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Lancament__IdCpf__48CFD27E">
+          <End Role="Cliente" Type="Self.Cliente" Multiplicity="1" />
+          <End Role="Lancamento" Type="Self.Lancamento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cliente">
+              <PropertyRef Name="Cpf" />
+            </Principal>
+            <Dependent Role="Lancamento">
+              <PropertyRef Name="IdCpf" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Lancament__IdNum__300424B4">
+          <End Role="Conta" Type="Self.Conta" Multiplicity="1" />
+          <End Role="Lancamento" Type="Self.Lancamento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Conta">
+              <PropertyRef Name="NumeroConta" />
+            </Principal>
+            <Dependent Role="Lancamento">
+              <PropertyRef Name="IdNumeroConta" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="InsertEndereco" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Logradouro" Type="varchar" Mode="In" />
+          <Parameter Name="Bairro" Type="varchar" Mode="In" />
+          <Parameter Name="Numero" Type="varchar" Mode="In" />
+          <Parameter Name="Estado" Type="varchar" Mode="In" />
+          <Parameter Name="Cidade" Type="varchar" Mode="In" />
+          <Parameter Name="Bloco" Type="varchar" Mode="In" />
+          <Parameter Name="Condominio" Type="varchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="IBModelStoreContainer">
+          <EntitySet Name="Agencia" EntityType="Self.Agencia" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cliente" EntityType="Self.Cliente" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Conta" EntityType="Self.Conta" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Endereco" EntityType="Self.Endereco" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Lancamento" EntityType="Self.Lancamento" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Pacote" EntityType="Self.Pacote" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Agencia__Enderec__2A4B4B5E" Association="Self.FK__Agencia__Enderec__2A4B4B5E">
+            <End Role="Endereco" EntitySet="Endereco" />
+            <End Role="Agencia" EntitySet="Agencia" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Cliente__Enderec__276EDEB3" Association="Self.FK__Cliente__Enderec__276EDEB3">
+            <End Role="Endereco" EntitySet="Endereco" />
+            <End Role="Cliente" EntitySet="Cliente" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Conta__IdAgencia__47DBAE45" Association="Self.FK__Conta__IdAgencia__47DBAE45">
+            <End Role="Agencia" EntitySet="Agencia" />
+            <End Role="Conta" EntitySet="Conta" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Conta__IdPacote__2D27B809" Association="Self.FK__Conta__IdPacote__2D27B809">
+            <End Role="Pacote" EntitySet="Pacote" />
+            <End Role="Conta" EntitySet="Conta" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Lancament__IdCpf__48CFD27E" Association="Self.FK__Lancament__IdCpf__48CFD27E">
+            <End Role="Cliente" EntitySet="Cliente" />
+            <End Role="Lancamento" EntitySet="Lancamento" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Lancament__IdNum__300424B4" Association="Self.FK__Lancament__IdNum__300424B4">
+            <End Role="Conta" EntitySet="Conta" />
+            <End Role="Lancamento" EntitySet="Lancamento" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="IBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Agencia">
+          <Key>
+            <PropertyRef Name="NumAgencia" />
+          </Key>
+          <Property Name="NumAgencia" Type="String" MaxLength="4" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="EnderecoId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Endereco" Relationship="Self.FK__Agencia__Enderec__2A4B4B5E" FromRole="Agencia" ToRole="Endereco" />
+          <NavigationProperty Name="Contas" Relationship="Self.FK__Conta__IdAgencia__47DBAE45" FromRole="Agencia" ToRole="Conta" />
+        </EntityType>
+        <EntityType Name="Cliente">
+          <Key>
+            <PropertyRef Name="Cpf" />
+          </Key>
+          <Property Name="Cpf" Type="String" MaxLength="11" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Nome" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DataNascimento" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EnderecoId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Endereco" Relationship="Self.FK__Cliente__Enderec__276EDEB3" FromRole="Cliente" ToRole="Endereco" />
+          <NavigationProperty Name="Lancamentoes" Relationship="Self.FK__Lancament__IdCpf__48CFD27E" FromRole="Cliente" ToRole="Lancamento" />
+        </EntityType>
+        <EntityType Name="Conta">
+          <Key>
+            <PropertyRef Name="NumeroConta" />
+          </Key>
+          <Property Name="NumeroConta" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Tipo" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Saldo" Type="Double" Nullable="false" />
+          <Property Name="IdPacote" Type="Int32" Nullable="false" />
+          <Property Name="IdAgencia" Type="String" MaxLength="4" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Agencia" Relationship="Self.FK__Conta__IdAgencia__47DBAE45" FromRole="Conta" ToRole="Agencia" />
+          <NavigationProperty Name="Pacote" Relationship="Self.FK__Conta__IdPacote__2D27B809" FromRole="Conta" ToRole="Pacote" />
+          <NavigationProperty Name="Lancamentoes" Relationship="Self.FK__Lancament__IdNum__300424B4" FromRole="Conta" ToRole="Lancamento" />
+        </EntityType>
+        <EntityType Name="Endereco">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Logradouro" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Bairro" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Numero" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Estado" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Cidade" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Bloco" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Condominio" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Agencias" Relationship="Self.FK__Agencia__Enderec__2A4B4B5E" FromRole="Endereco" ToRole="Agencia" />
+          <NavigationProperty Name="Clientes" Relationship="Self.FK__Cliente__Enderec__276EDEB3" FromRole="Endereco" ToRole="Cliente" />
+        </EntityType>
+        <EntityType Name="Lancamento">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Descricao" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Valor" Type="Double" Nullable="false" />
+          <Property Name="Data" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IdNumeroConta" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="IdCpf" Type="String" MaxLength="11" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Cliente" Relationship="Self.FK__Lancament__IdCpf__48CFD27E" FromRole="Lancamento" ToRole="Cliente" />
+          <NavigationProperty Name="Conta" Relationship="Self.FK__Lancament__IdNum__300424B4" FromRole="Lancamento" ToRole="Conta" />
+        </EntityType>
+        <EntityType Name="Pacote">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nome" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Contas" Relationship="Self.FK__Conta__IdPacote__2D27B809" FromRole="Pacote" ToRole="Conta" />
+        </EntityType>
+        <Association Name="FK__Agencia__Enderec__2A4B4B5E">
+          <End Role="Endereco" Type="Self.Endereco" Multiplicity="1" />
+          <End Role="Agencia" Type="Self.Agencia" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Endereco">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Agencia">
+              <PropertyRef Name="EnderecoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Conta__IdAgencia__47DBAE45">
+          <End Role="Agencia" Type="Self.Agencia" Multiplicity="1" />
+          <End Role="Conta" Type="Self.Conta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agencia">
+              <PropertyRef Name="NumAgencia" />
+            </Principal>
+            <Dependent Role="Conta">
+              <PropertyRef Name="IdAgencia" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Cliente__Enderec__276EDEB3">
+          <End Role="Endereco" Type="Self.Endereco" Multiplicity="1" />
+          <End Role="Cliente" Type="Self.Cliente" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Endereco">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Cliente">
+              <PropertyRef Name="EnderecoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Lancament__IdCpf__48CFD27E">
+          <End Role="Cliente" Type="Self.Cliente" Multiplicity="1" />
+          <End Role="Lancamento" Type="Self.Lancamento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cliente">
+              <PropertyRef Name="Cpf" />
+            </Principal>
+            <Dependent Role="Lancamento">
+              <PropertyRef Name="IdCpf" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Conta__IdPacote__2D27B809">
+          <End Role="Pacote" Type="Self.Pacote" Multiplicity="1" />
+          <End Role="Conta" Type="Self.Conta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Pacote">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Conta">
+              <PropertyRef Name="IdPacote" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Lancament__IdNum__300424B4">
+          <End Role="Conta" Type="Self.Conta" Multiplicity="1" />
+          <End Role="Lancamento" Type="Self.Lancamento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Conta">
+              <PropertyRef Name="NumeroConta" />
+            </Principal>
+            <Dependent Role="Lancamento">
+              <PropertyRef Name="IdNumeroConta" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="IBEntitiesModel" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Agencias" EntityType="Self.Agencia" />
+          <EntitySet Name="Clientes" EntityType="Self.Cliente" />
+          <EntitySet Name="Contas" EntityType="Self.Conta" />
+          <EntitySet Name="Enderecos" EntityType="Self.Endereco" />
+          <EntitySet Name="Lancamentos" EntityType="Self.Lancamento" />
+          <EntitySet Name="Pacotes" EntityType="Self.Pacote" />
+          <AssociationSet Name="FK__Agencia__Enderec__2A4B4B5E" Association="Self.FK__Agencia__Enderec__2A4B4B5E">
+            <End Role="Endereco" EntitySet="Enderecos" />
+            <End Role="Agencia" EntitySet="Agencias" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Conta__IdAgencia__47DBAE45" Association="Self.FK__Conta__IdAgencia__47DBAE45">
+            <End Role="Agencia" EntitySet="Agencias" />
+            <End Role="Conta" EntitySet="Contas" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Cliente__Enderec__276EDEB3" Association="Self.FK__Cliente__Enderec__276EDEB3">
+            <End Role="Endereco" EntitySet="Enderecos" />
+            <End Role="Cliente" EntitySet="Clientes" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Lancament__IdCpf__48CFD27E" Association="Self.FK__Lancament__IdCpf__48CFD27E">
+            <End Role="Cliente" EntitySet="Clientes" />
+            <End Role="Lancamento" EntitySet="Lancamentos" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Conta__IdPacote__2D27B809" Association="Self.FK__Conta__IdPacote__2D27B809">
+            <End Role="Pacote" EntitySet="Pacotes" />
+            <End Role="Conta" EntitySet="Contas" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Lancament__IdNum__300424B4" Association="Self.FK__Lancament__IdNum__300424B4">
+            <End Role="Conta" EntitySet="Contas" />
+            <End Role="Lancamento" EntitySet="Lancamentos" />
+          </AssociationSet>
+          <FunctionImport Name="InsertEndereco">
+            <Parameter Name="Logradouro" Mode="In" Type="String" />
+            <Parameter Name="Bairro" Mode="In" Type="String" />
+            <Parameter Name="Numero" Mode="In" Type="String" />
+            <Parameter Name="Estado" Mode="In" Type="String" />
+            <Parameter Name="Cidade" Mode="In" Type="String" />
+            <Parameter Name="Bloco" Mode="In" Type="String" />
+            <Parameter Name="Condominio" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="IBModelStoreContainer" CdmEntityContainer="IBEntitiesModel">
+          <EntitySetMapping Name="Agencias">
+            <EntityTypeMapping TypeName="IBModel.Agencia">
+              <MappingFragment StoreEntitySet="Agencia">
+                <ScalarProperty Name="NumAgencia" ColumnName="NumAgencia" />
+                <ScalarProperty Name="EnderecoId" ColumnName="EnderecoId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Clientes">
+            <EntityTypeMapping TypeName="IBModel.Cliente">
+              <MappingFragment StoreEntitySet="Cliente">
+                <ScalarProperty Name="Cpf" ColumnName="Cpf" />
+                <ScalarProperty Name="Nome" ColumnName="Nome" />
+                <ScalarProperty Name="DataNascimento" ColumnName="DataNascimento" />
+                <ScalarProperty Name="EnderecoId" ColumnName="EnderecoId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Contas">
+            <EntityTypeMapping TypeName="IBModel.Conta">
+              <MappingFragment StoreEntitySet="Conta">
+                <ScalarProperty Name="NumeroConta" ColumnName="NumeroConta" />
+                <ScalarProperty Name="Tipo" ColumnName="Tipo" />
+                <ScalarProperty Name="Saldo" ColumnName="Saldo" />
+                <ScalarProperty Name="IdPacote" ColumnName="IdPacote" />
+                <ScalarProperty Name="IdAgencia" ColumnName="IdAgencia" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Enderecos">
+            <EntityTypeMapping TypeName="IBModel.Endereco">
+              <MappingFragment StoreEntitySet="Endereco">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Logradouro" ColumnName="Logradouro" />
+                <ScalarProperty Name="Bairro" ColumnName="Bairro" />
+                <ScalarProperty Name="Numero" ColumnName="Numero" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="Cidade" ColumnName="Cidade" />
+                <ScalarProperty Name="Bloco" ColumnName="Bloco" />
+                <ScalarProperty Name="Condominio" ColumnName="Condominio" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Lancamentos">
+            <EntityTypeMapping TypeName="IBModel.Lancamento">
+              <MappingFragment StoreEntitySet="Lancamento">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Descricao" ColumnName="Descricao" />
+                <ScalarProperty Name="Valor" ColumnName="Valor" />
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="IdNumeroConta" ColumnName="IdNumeroConta" />
+                <ScalarProperty Name="IdCpf" ColumnName="IdCpf" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Pacotes">
+            <EntityTypeMapping TypeName="IBModel.Pacote">
+              <MappingFragment StoreEntitySet="Pacote">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Nome" ColumnName="Nome" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="InsertEndereco" FunctionName="IBModel.Store.InsertEndereco" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
